@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Опросник «Температура развития»</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1a2744;
+      --blue: #2152a3;
+      --blue-light: #e8eef9;
+      --accent: #e05c2a;
+      --amber: #f59e0b;
+      --amber-light: #fef3c7;
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --yellow: #d97706;
+      --yellow-light: #fef9c3;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: linear-gradient(135deg, #e8eef9 0%, #f0f4fb 50%, #eaf0fa 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      color: var(--gray-800);
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 4px 40px rgba(26, 39, 68, 0.12);
+      max-width: 820px;
+      margin: 0 auto;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card-body {
+      flex: 1;
+      padding: 2.5rem 2.5rem 1.5rem;
+    }
+
+    /* ── INTRO ── */
+    .intro-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--navy);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .intro-text p {
+      color: var(--gray-700);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .intro-text p:last-child {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    /* ── PROGRESS ── */
+    .progress-label {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      background: var(--gray-200);
+      border-radius: 99px;
+      height: 6px;
+      margin-bottom: 2rem;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--blue), var(--accent));
+      height: 6px;
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── QUESTION ── */
+    .question-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--navy);
+      margin-bottom: 1.75rem;
+      line-height: 1.4;
+    }
+
+    .options { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .option-btn {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      text-align: left;
+      border-radius: 10px;
+      border: 2px solid var(--gray-200);
+      background: var(--white);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.97rem;
+    }
+
+    .option-btn:hover {
+      border-color: #a8beeb;
+      background: #f5f8ff;
+      transform: translateX(2px);
+    }
+
+    .option-btn.selected {
+      border-color: var(--blue);
+      background: var(--blue-light);
+    }
+
+    .option-num {
+      font-weight: 700;
+      min-width: 1.4rem;
+      color: var(--gray-400);
+      font-size: 1rem;
+    }
+
+    .option-btn.selected .option-num { color: var(--blue); }
+
+    .option-label {
+      color: var(--gray-700);
+      line-height: 1.45;
+    }
+
+    .option-btn.selected .option-label { color: var(--gray-800); }
+
+    /* ── FOOTER NAV ── */
+    .card-footer {
+      border-top: 1px solid var(--gray-200);
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-back {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      background: none;
+      color: var(--gray-500);
+      cursor: pointer;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .btn-back:hover { color: var(--gray-800); background: var(--gray-100); }
+
+    .btn-next {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.6rem 1.5rem;
+      border: none;
+      background: var(--blue);
+      color: var(--white);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-next:hover:not(:disabled) { background: #1a3f82; transform: translateY(-1px); }
+    .btn-next:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; transform: none; }
+
+    /* ── RESULTS ── */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .results-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: var(--navy);
+    }
+
+    .btn-pdf {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.2rem;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    .btn-pdf:hover { background: #1a3f82; }
+
+    .score-box {
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .score-num { font-size: 4rem; font-weight: 700; color: var(--gray-800); line-height: 1; margin-bottom: 0.5rem; }
+    .score-label { font-size: 1.3rem; font-weight: 600; }
+
+    .interp-box {
+      background: var(--gray-50);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .interp-box h3 {
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .interp-box ul { list-style: none; }
+    .interp-box li { color: var(--gray-700); padding: 0.2rem 0; font-size: 0.95rem; }
+    .interp-box li span { font-weight: 600; }
+
+    .detail-title {
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .detail-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--gray-200);
+      background: var(--white);
+    }
+
+    .detail-item.low { border-color: var(--amber); background: var(--amber-light); }
+
+    .detail-item p { color: var(--gray-700); font-size: 0.95rem; flex: 1; line-height: 1.4; }
+
+    .detail-score-wrap { display: flex; flex-direction: column; align-items: center; min-width: 56px; }
+    .detail-score { font-size: 1.5rem; font-weight: 700; color: var(--gray-800); }
+    .detail-item.low .detail-score { color: var(--amber); }
+    .low-tag { font-size: 0.72rem; color: var(--amber); font-weight: 600; margin-top: 2px; white-space: nowrap; }
+
+    .warning-box {
+      background: var(--amber-light);
+      border: 2px solid var(--amber);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .warning-box h3 { font-weight: 600; color: var(--gray-800); margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .warning-box p { color: var(--gray-700); font-size: 0.93rem; line-height: 1.55; }
+
+    .reflect-box {
+      background: var(--blue-light);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .reflect-box h3 { font-weight: 600; color: var(--gray-800); margin-bottom: 0.6rem; font-size: 0.95rem; }
+    .reflect-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .reflect-box li { color: var(--gray-700); display: flex; gap: 0.5rem; font-size: 0.95rem; }
+
+    .footer-note { font-size: 0.82rem; color: var(--gray-500); font-style: italic; line-height: 1.5; margin-bottom: 0.5rem; }
+    .footer-link { font-size: 0.88rem; color: var(--gray-700); }
+    .footer-link a { color: var(--blue); text-decoration: underline; font-weight: 600; }
+
+    /* colour variants */
+    .bg-green { background: var(--green-light); }
+    .bg-blue  { background: var(--blue-light); }
+    .bg-yellow{ background: var(--yellow-light); }
+    .bg-red   { background: var(--red-light); }
+    .c-green  { color: var(--green); }
+    .c-blue   { color: var(--blue); }
+    .c-yellow { color: var(--yellow); }
+    .c-red    { color: var(--red); }
+
+    /* hidden screens */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* chevron icons */
+    .icon { width: 18px; height: 18px; display: inline-block; vertical-align: middle; }
+
+    @media (max-width: 600px) {
+      .card-body { padding: 1.5rem 1.25rem 1rem; }
+      .card-footer { padding: 1rem 1.25rem; }
+      .intro-title, .question-text { font-size: 1.3rem; }
+      .score-num { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-body">
+
+    <!-- INTRO -->
+    <div class="screen active" id="screen-0">
+      <h1 class="intro-title">Опросник «Температура развития»</h1>
+      <div class="intro-text">
+        <p>Добро пожаловать в опросник «Температура развития»!</p>
+        <p>Подумайте о роли, которую вы хорошо знаете. Это может быть ваша нынешняя должность или та, которую вы хотели бы занять в качестве следующего шага. Также вы можете подумать о роли для одного из членов вашей команды.</p>
+        <p>На следующих экранах вы увидите 11 утверждений. Оцените каждое из них по степени сложности, с которой сталкивается / столкнётся человек на этой роли.</p>
+        <p>В конце вы увидите итоговый балл.</p>
+      </div>
+    </div>
+
+    <!-- QUESTIONS (generated by JS) -->
+
+    <!-- RESULTS -->
+    <div class="screen" id="screen-results">
+      <div class="results-header">
+        <h2 class="results-title">Ваши результаты</h2>
+        <button class="btn-pdf" onclick="downloadPDF()">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Скачать PDF
+        </button>
+      </div>
+      <div id="score-box" class="score-box"></div>
+      <div class="interp-box">
+        <h3>Интерпретация баллов</h3>
+        <ul>
+          <li><span>45–55</span> = Очень развивающая</li>
+          <li><span>35–44</span> = Развивающая</li>
+          <li><span>21–34</span> = Начинает застаиваться?</li>
+          <li><span>&lt;20</span> = На пенсии, но всё ещё приходит на работу?</li>
+        </ul>
+      </div>
+      <p class="detail-title">Ваши подробные баллы</p>
+      <div class="detail-list" id="detail-list"></div>
+      <div id="warning-box" style="display:none" class="warning-box">
+        <h3>Области с низким уровнем сложности</h3>
+        <p>Выделенные выше пункты получили оценку 2 или ниже, что указывает на области, в которых роль можно усилить для повышения температуры развития. Учитывайте их при размышлении о возможных изменениях.</p>
+      </div>
+      <div class="reflect-box">
+        <h3>Вопросы для рефлексии</h3>
+        <ul>
+          <li><span>•</span><span>Что означает этот балл?</span></li>
+          <li><span>•</span><span>Какие аспекты роли можно изменить, чтобы повысить температуру развития?</span></li>
+        </ul>
+      </div>
+      <p class="footer-note">Создано Сергеем Горбатовым и Анджелой Лейн на основе <em>«Eighty-Eight Assignments for Development in Place: Enhancing the Developmental Challenge of existing jobs»</em> Майкла М. Ломбардо и Роберта У. Айхингера.</p>
+      <p class="footer-link">Больше информации на <a href="https://www.theedgeyouneed.com" target="_blank" rel="noopener noreferrer">theedgeyouneed.com</a></p>
+    </div>
+
+  </div><!-- /card-body -->
+
+  <div class="card-footer">
+    <button class="btn-back" id="btn-back" onclick="goBack()" style="display:none">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Назад
+    </button>
+    <button class="btn-next" id="btn-next" onclick="goNext()">
+      Далее
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    "Успех или неудача — оба возможны, очевидны и имеют значение.",
+    "Требует взятия инициативы и руководства.",
+    "Предполагает работу с новыми или самыми разными людьми.",
+    "Создаёт высокое личное давление (дедлайны, ставки, масштаб, командировки, долгие рабочие часы).",
+    "Требует влияния без формальных полномочий (коллеги, партнёры, клиенты, политика).",
+    "Предполагает разнообразие или нечто принципиально иное по сравнению с прошлым опытом.",
+    "Работа находится под пристальным вниманием тех, чьё мнение важно.",
+    "Включает создание чего-то с нуля или выправление ситуации, находящейся в кризисе.",
+    "Требует масштабного интеллектуального/стратегического решения проблем без прецедентов или с минимальным их количеством.",
+    "Предполагает работу со значимым руководителем (например, поддерживающим/не поддерживающим, позитивным/негативным примером, конфликты и т.д.).",
+    "Чего-то важного не хватает (ресурсов, поддержки, навыков, авторитета)."
+  ];
+
+  const scaleLabels = [
+    "Минимальная сложность по сравнению с другими задачами/работами",
+    "Некоторая сложность по сравнению с другими задачами/работами",
+    "Сложность примерно как в большинстве других задач/работ",
+    "Бо́льшая сложность, чем в других задачами/работах",
+    "Значительно бо́льшая сложность, чем в других задачах/работах"
+  ];
+
+  let currentScreen = 0; // 0 = intro, 1..11 = questions, 12 = results
+  const responses = {};
+  const TOTAL = questions.length;
+
+  // Build question screens
+  const cardBody = document.querySelector('.card-body');
+  questions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'screen';
+    div.id = `screen-${i + 1}`;
+    div.innerHTML = `
+      <div class="progress-label">Вопрос ${i + 1} из ${TOTAL}</div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" style="width:${((i+1)/TOTAL*100).toFixed(1)}%"></div></div>
+      <p class="question-text">${q}</p>
+      <div class="options">
+        ${[1,2,3,4,5].map(v => `
+          <button class="option-btn" data-q="${i}" data-v="${v}" onclick="selectOption(${i},${v})">
+            <span class="option-num">${v}</span>
+            <span class="option-label">${scaleLabels[v-1]}</span>
+          </button>`).join('')}
+      </div>`;
+    // Insert before results screen
+    cardBody.insertBefore(div, document.getElementById('screen-results'));
+  });
+
+  function selectOption(qIdx, val) {
+    responses[qIdx] = val;
+    document.querySelectorAll(`.option-btn[data-q="${qIdx}"]`).forEach(btn => {
+      btn.classList.toggle('selected', parseInt(btn.dataset.v) === val);
+    });
+    updateNav();
+  }
+
+  function updateNav() {
+    const backBtn = document.getElementById('btn-back');
+    const nextBtn = document.getElementById('btn-next');
+    backBtn.style.display = currentScreen > 0 ? 'flex' : 'none';
+
+    const isResults = currentScreen === TOTAL + 1;
+    nextBtn.style.display = isResults ? 'none' : 'flex';
+
+    if (currentScreen === TOTAL) {
+      nextBtn.textContent = '';
+      nextBtn.innerHTML = 'Посмотреть результаты <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>';
+    } else {
+      nextBtn.innerHTML = 'Далее <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>';
+    }
+
+    // disable next if question unanswered
+    if (currentScreen >= 1 && currentScreen <= TOTAL) {
+      nextBtn.disabled = responses[currentScreen - 1] === undefined;
+    } else {
+      nextBtn.disabled = false;
+    }
+  }
+
+  function showScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    if (n === TOTAL + 1) {
+      document.getElementById('screen-results').classList.add('active');
+      buildResults();
+    } else {
+      document.getElementById(`screen-${n}`).classList.add('active');
+    }
+  }
+
+  function goNext() {
+    if (currentScreen < TOTAL + 1) {
+      currentScreen++;
+      showScreen(currentScreen);
+      updateNav();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function goBack() {
+    if (currentScreen > 0) {
+      currentScreen--;
+      showScreen(currentScreen);
+      updateNav();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function calculateScore() {
+    return Object.values(responses).reduce((s, v) => s + v, 0);
+  }
+
+  function getInterpretation(score) {
+    if (score >= 45) return { text: "Очень развивающая", colorClass: "c-green", bgClass: "bg-green" };
+    if (score >= 35) return { text: "Развивающая",       colorClass: "c-blue",  bgClass: "bg-blue"  };
+    if (score >= 21) return { text: "Начинает застаиваться?", colorClass: "c-yellow", bgClass: "bg-yellow" };
+    return { text: "На пенсии, но всё ещё приходит на работу?", colorClass: "c-red", bgClass: "bg-red" };
+  }
+
+  function buildResults() {
+    const score = calculateScore();
+    const interp = getInterpretation(score);
+
+    // score box
+    const sb = document.getElementById('score-box');
+    sb.className = `score-box ${interp.bgClass}`;
+    sb.innerHTML = `<div class="score-num">${score}</div><div class="score-label ${interp.colorClass}">${interp.text}</div>`;
+
+    // detail list
+    const dl = document.getElementById('detail-list');
+    dl.innerHTML = '';
+    let hasLow = false;
+    questions.forEach((q, i) => {
+      const sc = responses[i] || 0;
+      const low = sc <= 2;
+      if (low) hasLow = true;
+      const item = document.createElement('div');
+      item.className = `detail-item${low ? ' low' : ''}`;
+      item.innerHTML = `
+        <p>${q}</p>
+        <div class="detail-score-wrap">
+          <span class="detail-score">${sc}</span>
+          ${low ? '<span class="low-tag">Низкая сложность</span>' : ''}
+        </div>`;
+      dl.appendChild(item);
+    });
+
+    document.getElementById('warning-box').style.display = hasLow ? 'block' : 'none';
+  }
+
+  function downloadPDF() {
+    const score = calculateScore();
+    const interp = getInterpretation(score);
+    const rows = questions.map((q, i) => {
+      const sc = responses[i] || 0;
+      const low = sc <= 2;
+      return `<div class="qi${low?' low':''}"><div class="qt">${i+1}. ${q}</div><div class="qs">${sc}</div></div>`;
+    }).join('');
+    const hasLow = questions.some((_, i) => (responses[i] || 0) <= 2);
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Результаты</title><style>
+      body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;color:#333}
+      h1{color:#1a2744;border-bottom:3px solid #1a2744;padding-bottom:10px}
+      h2{color:#374151;margin-top:24px}
+      .sb{background:#f3f4f6;border-left:5px solid #2152a3;padding:20px;margin:20px 0;text-align:center}
+      .sn{font-size:48px;font-weight:bold}
+      .si{font-size:22px;font-weight:bold;color:#2152a3}
+      .qi{padding:12px;margin:8px 0;border:1px solid #e5e7eb;border-radius:5px;display:flex;justify-content:space-between;align-items:center}
+      .qi.low{background:#fef3c7;border:2px solid #f59e0b}
+      .qt{flex:1}
+      .qs{font-size:22px;font-weight:bold;min-width:44px;text-align:center}
+      .rb{background:#dbeafe;padding:16px;border-radius:5px;margin:20px 0}
+      .ig{background:#f9fafb;padding:14px;border-radius:5px;margin:16px 0}
+      .ft{margin-top:36px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280}
+      .ft a{color:#2152a3}
+      @media print{body{margin:16px}}
+    </style></head><body>
+    <h1>Результаты опросника «Температура развития»</h1>
+    <div class="sb"><div class="sn">${score}</div><div class="si">${interp.text}</div></div>
+    <div class="ig"><h2>Интерпретация баллов:</h2><ul>
+      <li><strong>45–55</strong> = Очень развивающая</li>
+      <li><strong>35–44</strong> = Развивающая</li>
+      <li><strong>21–34</strong> = Начинает застаиваться?</li>
+      <li><strong>&lt;20</strong> = На пенсии, но всё ещё приходит на работу?</li>
+    </ul></div>
+    <h2>Ваши подробные баллы:</h2>${rows}
+    ${hasLow ? `<div class="ig" style="background:#fef3c7;border-left:4px solid #f59e0b"><h3>Области с низким уровнем сложности:</h3><p>Выделенные пункты получили оценку 2 или ниже. Рассмотрите возможность усиления роли в этих областях.</p></div>` : ''}
+    <div class="rb"><h2>Вопросы для рефлексии:</h2><ul>
+      <li>Что означает этот балл?</li>
+      <li>Какие аспекты роли можно изменить, чтобы повысить температуру развития?</li>
+    </ul></div>
+    <div class="ft">
+      <p><em>Создано Сергеем Горбатовым и Анджелой Лейн на основе «Eighty-Eight Assignments for Development in Place» Майкла М. Ломбардо и Роберта У. Айхингера.</em></p>
+      <p>Больше информации на <a href="https://www.theedgeyouneed.com">theedgeyouneed.com</a></p>
+    </div>
+    </body></html>`;
+
+    const w = window.open('', '_blank');
+    if (w) { w.document.write(html); w.document.close(); setTimeout(() => w.print(), 300); }
+  }
+
+  // init
+  updateNav();
+</script>
+</body>
+</html>
